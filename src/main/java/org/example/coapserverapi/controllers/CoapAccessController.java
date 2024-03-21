@@ -1,6 +1,5 @@
 package org.example.coapserverapi.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.californium.core.CoapResource;
@@ -9,6 +8,7 @@ import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.example.coapserverapi.models.AccessResponseModel;
 import org.example.coapserverapi.services.CoapService;
 import org.springframework.stereotype.Component;
 
@@ -44,10 +44,12 @@ public class CoapAccessController extends CoapServer {
             System.out.println(Utils.prettyPrint(request));
 
             // Communicate with ABAC Model
-            coapService.sendAccessRequest(request.getPayloadString());
+            AccessResponseModel response = coapService.sendAccessRequest(request.getPayloadString());
+
+            System.out.println(response);
 
             // Send response
-            exchange.respond(CoAP.ResponseCode.CONTENT, "OK");
+            exchange.respond(CoAP.ResponseCode.CONTENT, response.getDecision().toString());
         }
     }
 }

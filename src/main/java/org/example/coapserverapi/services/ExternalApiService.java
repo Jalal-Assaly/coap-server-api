@@ -1,10 +1,8 @@
 package org.example.coapserverapi.services;
 
-import org.example.coapserverapi.models.AccessRequestModel;
 import org.example.coapserverapi.models.AccessResponseModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -14,15 +12,15 @@ public class ExternalApiService {
 
     public ExternalApiService() {
         this.webClient = WebClient.builder()
-                .baseUrl("http://localhost:port/ABACMODEL")
+                .baseUrl("http://localhost:8086/access-control")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
 
-    public AccessResponseModel sendAccessRequest(AccessRequestModel requestModel) {
+    public AccessResponseModel sendAccessRequest(String requestPayload) {
         return webClient.put()
-                .uri("insertURI")
-                .bodyValue(requestModel)
+                .uri("/request")
+                .bodyValue(requestPayload)
                 .retrieve()
                 .bodyToMono(AccessResponseModel.class)
                 .block();
