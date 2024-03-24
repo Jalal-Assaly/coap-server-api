@@ -7,4 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class AccessResponseModel {
     private Boolean decision;
+    private String reason;
 }
