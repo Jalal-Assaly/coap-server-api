@@ -11,6 +11,7 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.example.coapserverapi.models.AccessResponseModel;
 import org.example.coapserverapi.services.CoapService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 
 @Component
@@ -41,15 +42,20 @@ public class CoapAccessController extends CoapServer {
 
             // Received request
             Request request = exchange.advanced().getRequest();
+            AccessResponseModel response;
             System.out.println(Utils.prettyPrint(request));
 
             // Communicate with ABAC Model
-            AccessResponseModel response = coapService.sendAccessRequest(request.getPayloadString());
+            try {
+                response = coapService.sendAccessRequest(request.getPayloadString());
+            } catch (WebClientResponseException exception) {
+                response = new AccessResponseModel(false, "Request attributes are missing or null");
+            }
 
             System.out.println(response);
 
             // Send response
-            exchange.respond(CoAP.ResponseCode.CONTENT, response.getDecision().toString());
+            exchange.respond(CoAP.ResponseCode.CONTENT, response.toString());
         }
     }
 }
