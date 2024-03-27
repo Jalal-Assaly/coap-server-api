@@ -49,7 +49,7 @@ public class CoapAccessController extends CoapServer {
             try {
                 response = coapService.sendAccessRequest(request.getPayloadString());
             } catch (WebClientResponseException exception) {
-                response = new AccessResponseModel(false, "Request attributes are missing or null");
+                response = new AccessResponseModel(false);
             }
 
             System.out.println(response);
