@@ -1,4 +1,4 @@
-package org.example.coapserverapi.controllers;
+package org.pacs.coapserverapi.controllers;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,8 @@ import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.example.coapserverapi.models.AccessResponseModel;
-import org.example.coapserverapi.services.CoapService;
+import org.pacs.coapserverapi.models.AccessResponseModel;
+import org.pacs.coapserverapi.services.CoapService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 

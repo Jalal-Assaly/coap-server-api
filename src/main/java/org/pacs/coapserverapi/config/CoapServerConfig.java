@@ -1,4 +1,4 @@
-package org.example.coapserverapi.config;
+package org.pacs.coapserverapi.config;
 
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.config.CoapConfig;

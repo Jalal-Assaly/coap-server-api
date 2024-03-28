@@ -1,6 +1,6 @@
-package org.example.coapserverapi.services;
+package org.pacs.coapserverapi.services;
 
-import org.example.coapserverapi.models.AccessResponseModel;
+import org.pacs.coapserverapi.models.AccessResponseModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

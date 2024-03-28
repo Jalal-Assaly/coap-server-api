@@ -1,7 +1,7 @@
-package org.example.coapserverapi.services;
+package org.pacs.coapserverapi.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.coapserverapi.models.AccessResponseModel;
+import org.pacs.coapserverapi.models.AccessResponseModel;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,4 +1,4 @@
-package org.example.coapserverapi.models;
+package org.pacs.coapserverapi.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
