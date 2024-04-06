@@ -15,7 +15,7 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.pacs.coapserverapi.models.AccessResponseModel;
 import org.pacs.coapserverapi.services.CoapService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -78,7 +78,7 @@ public class CoapAccessController extends CoapServer {
             AccessResponseModel response;
             try {
                 response = coapService.sendAccessRequest(endpoint, request.getPayloadString());
-            } catch (WebClientRequestException exception) {
+            } catch (WebClientResponseException exception) {
                 response = new AccessResponseModel(false);
             }
 
