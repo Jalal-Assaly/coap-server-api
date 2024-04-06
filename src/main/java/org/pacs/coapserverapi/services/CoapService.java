@@ -10,7 +10,7 @@ public class CoapService {
 
     private final ExternalApiService apiService;
 
-    public AccessResponseModel sendAccessRequest(String requestPayload) {
-        return apiService.sendAccessRequest(requestPayload);
+    public AccessResponseModel sendAccessRequest(String endpoint, String requestPayload) {
+        return apiService.sendAccessRequest(endpoint, requestPayload);
     }
 }

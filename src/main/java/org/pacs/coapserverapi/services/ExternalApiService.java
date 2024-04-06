@@ -17,9 +17,9 @@ public class ExternalApiService {
                 .build();
     }
 
-    public AccessResponseModel sendAccessRequest(String requestPayload) {
+    public AccessResponseModel sendAccessRequest(String endpoint, String requestPayload) {
         return webClient.put()
-                .uri("/request")
+                .uri("/request/{endpoint}", endpoint)
                 .bodyValue(requestPayload)
                 .retrieve()
                 .bodyToMono(AccessResponseModel.class)

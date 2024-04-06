@@ -1,5 +1,9 @@
 package org.pacs.coapserverapi.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.californium.core.CoapResource;
@@ -11,7 +15,10 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.pacs.coapserverapi.models.AccessResponseModel;
 import org.pacs.coapserverapi.services.CoapService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
+
+import java.io.IOException;
+import java.util.Map;
 
 
 @Component
@@ -38,24 +45,53 @@ public class CoapAccessController extends CoapServer {
         }
 
         @Override
+        public void handleGET(CoapExchange exchange) {
+            Request request = exchange.advanced().getRequest();
+            System.out.println(Utils.prettyPrint(request));
+            exchange.respond(CoAP.ResponseCode.CONTENT, "Well received !", 0);
+        }
+
+        @Override
         public void handlePUT(CoapExchange exchange) {
+
+            // Endpoint to be called
+            String endpoint = "employee";
 
             // Received request
             Request request = exchange.advanced().getRequest();
-            AccessResponseModel response;
             System.out.println(Utils.prettyPrint(request));
+            System.out.println(request.getPayloadString());
+
+            // Visitor or employee role
+            byte[] payload = request.getPayload();
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                Map<String, Map<String, Object>> actualJson = objectMapper.readValue(payload, new TypeReference<>(){});
+                if (actualJson.get("userAttributes").get("role").equals("Visitor")) {
+                    endpoint = "visitor";
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("JSON deserialization exception");
+            }
 
             // Communicate with ABAC Model
+            AccessResponseModel response;
             try {
-                response = coapService.sendAccessRequest(request.getPayloadString());
-            } catch (WebClientResponseException exception) {
+                response = coapService.sendAccessRequest(endpoint, request.getPayloadString());
+            } catch (WebClientRequestException exception) {
                 response = new AccessResponseModel(false);
             }
 
-            System.out.println(response);
-
             // Send response
-            exchange.respond(CoAP.ResponseCode.CONTENT, response.toString());
+            ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String jsonResponse;
+            try {
+                jsonResponse = objectWriter.writeValueAsString(response);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            exchange.respond(CoAP.ResponseCode.CONTENT, jsonResponse, 50);
         }
     }
 }
